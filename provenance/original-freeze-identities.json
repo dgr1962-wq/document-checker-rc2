@@ -1,0 +1,32 @@
+[
+  {
+    "freeze_id": "AD015-TEXTD2-R1-development",
+    "manifest_sha256": "86a1cd743f3b681037ee6ef94e44b6df9ac6db005e08dd5f540fd71f7fd84ee9",
+    "bound_artifacts_verified": 18
+  },
+  {
+    "freeze_id": "A05-AD015-TEXTD2-R1-development",
+    "manifest_sha256": "a21716ec83cf52954c1bececde7642a7c21b0a15402b9f939ab47a61274227af",
+    "bound_artifacts_verified": 23
+  },
+  {
+    "freeze_id": "AD015-TEXTD2-R2-development",
+    "manifest_sha256": "6ddf1f54f4d502ef717e5d33a636eb4270572789c00ecf3ef289e9009ebb7b72",
+    "bound_artifacts_verified": 15
+  },
+  {
+    "freeze_id": "B046-AD015-TEXTD2-R2-development",
+    "manifest_sha256": "6e8db195c63dc9b262a8492bcce476f1c20897617ead9f4cfced231797394c02",
+    "bound_artifacts_verified": 59
+  },
+  {
+    "freeze_id": "OP-PREFLIGHT-R2-development",
+    "manifest_sha256": "4d3cbb7bb22d2707b766c2b916f26a98c004e2bb9e28ac6d8bd00d024d7673f2",
+    "bound_artifacts_verified": 8
+  },
+  {
+    "freeze_id": "R3-DOC-CLOSURE-1-development",
+    "manifest_sha256": "ca39952d674ae0aab0d86d921e5543754bbaf6898c816fe09be71847578572d0",
+    "bound_artifacts_verified": 4
+  }
+]
