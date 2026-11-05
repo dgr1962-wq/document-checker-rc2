@@ -1,0 +1,47 @@
+OPERATOR PREFLIGHT RECEIPT CONTRACT — OP-R2.1
+R2-P03 / R2-S20. Operator control records only; never analytical inputs.
+
+External prerequisites (not implemented by receipt_contract.py):
+1. Obtain independently established expected identities for the selected neutral
+and consumer freezes. Verify each manifest and every bound file against those
+identities; copying a digest from the submitted CDM/spec is not acquisition.
+2. Obtain the Admission0.1.5 spec digest from that verified neutral manifest;
+verify delivered spec bytes. A's original freeze binding remains unchanged.
+3. Apply the complete Admission preflight. Retain ORIGINAL raw manifest/report
+bytes; reject duplicate keys, invalid scalars, noncanonical JSON and inconsistent
+identity before constructing transport. Do not silently canonicalize invalid raw
+input. A structured object cannot prove what original raw bytes were supplied.
+4. Verify run/stage identity, exact CDM raw bytes and canonical identity, delivery
+bytes and digest against the applicable consumer profile. Record original raw
+manifest/report digests and detached canonicality verification evidence digest.
+5. After these steps, emit OP-R2.1 receipt. It contains neutral and consumer freeze
+IDs/manifest digests, spec digest, run_id, consumer, stage, supported version,
+CDM raw and structured identities, delivery digest, original raw manifest/report
+digests, canonicality evidence digest, UTC verification timestamp, verification
+outcome VERIFIED, independent-pin status VERIFIED and raw-JCS status VERIFIED.
+The evidence digest binds a separately retained verification record identifying
+the original raw artifacts, strict parsing/JCS comparison and result. Do not
+invent or infer missing verification evidence.
+6. validate_receipt compares this receipt to the already externally VERIFIED
+context and rejects missing, non-VERIFIED or mismatched fields. That context must
+be built from the retained successful external preflight, not supplied arbitrary
+claims. This checker does NOT acquire trust, authenticate an operator, implement
+full Admission or authorize execution. A self-consistent fabricated context and
+receipt cannot establish trust; callers must satisfy steps 1-4 independently.
+7. Keep receipt bytes immutable; hash them in a detached .sha256 file. Receipt
+references CDM and envelope; neither references this receipt, avoiding a hash
+cycle. No new CDM artifact class or spec self-hash. Retain failed receipts and
+reasons. Missing/unverified/mismatched receipt stops preflight; no repair/retry.
+
+Stages: PASS_B_ASSESSMENT, PASS_A_INVENTORY, PASS_A_CLASSIFICATION. Consumer/stage
+must agree. For A stages, this is an external operator record: it does not modify
+A0.5, its inventory receipt, neutral pin or analytical behavior. Original A binding
+remains required. No paired A/B run or automatic migration to the new shared
+bundle is authorized. Real transport compatibility remains a future gate.
+
+No receipt is currently issued for a real assessment. Tests use explicitly
+synthetic declared VERIFIED contexts, not evidence of verified real-world trust.
+No trust-root service, cryptographic attestation scheme or assessment runner is
+introduced. Current execution holds override every successful structural check:
+paid_regression_allowed=false; join_allowed=false; heldout_progression_allowed=false.
+Next gate is scoped R3 design review, not execution.
