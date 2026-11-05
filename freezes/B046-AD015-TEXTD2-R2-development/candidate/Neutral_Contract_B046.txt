@@ -1,0 +1,117 @@
+NEUTRAL ADMISSION/CDM MAPPING — B046
+
+Source: byte-preserved Input Admission 0.1.5 from the independent neutral successor
+development freeze AD015-TEXTD2-R2-development. This does
+not import A's instrument, analytical artifacts, classifications or approval.
+Copies of this neutral spec and TEXT-D2 are included with this B record.
+
+Mappings (identity, not inferred equivalence):
+apk_id / apk_sha256 -> run_record.apk_id / apk_sha256. Verify JCS manifest hash.
+admission_report.report_sha256 -> run_record.admission_report_sha256; verify JCS,
+report input binding and admission outcome ADMITTED or ADMITTED_WITH_WARNINGS.
+REJECTED, mismatched IDs/hashes, missing metadata or unsupported representation
+stop assessment: preserve failure reason, no analytical event output.
+node_id -> canonical message/location ref_id when ref_kind=NODE. No renumbering.
+source_id -> location ref_id when ref_kind=SOURCE. No source/message conflation.
+seq -> serialization order. Turn blocks -> inter-turn order. NOT_PRESERVED within
+one turn -> unknown cross-node timing, never prior merely from serial position.
+role -> exact declared role; no inferred human identity/authorship or authenticity.
+content_sha256/content_length_bytes -> exact admitted UTF8 bytes. Byte offsets
+are zero-based/end-exclusive on Unicode codepoint boundaries, never normalized.
+BINARY, NONE, UNKNOWN_PAYLOAD, WITHHELD -> retained coverage with unassessable reason.
+Hidden operational nodes -> retained, not discarded for ui_visibility.
+assistant_context_visibility -> available/unknown/not-available gate, distinct from UI.
+OP_CALL/OP_RESULT/op_link -> retained neutral provenance, not proof of reasoning.
+Sources: media_type, original origin, route, delivery node, available_first_seq,
+availability basis/declaration, readability, completeness and truncation stay intact.
+REVIEWER_ADDED -> rejection; UNKNOWN original origin remains warned, not invented.
+RECORD_EVIDENCED links and PROVIDER_DECLARED anchors are checked mechanically.
+Declaration bytes/hashes/references remain retained neutral provenance.
+Source text ranges require supplied text/* bytes and READABLE declaration;
+PDF/binary has no implicit text replacement. No parser, OCR or external retrieval.
+source_completeness -> run metadata and limitations; matching input is not proof
+that a provider exported everything. UNVERIFIED/KNOWN_INCOMPLETE remains exploratory.
+representation_version -> EXACT_TEXT_UTF8; wrapper_version -> B046-TEXTD2.
+Warnings/reject codes retained in the original report, not interpreted as findings.
+
+CDM: consumer PASS_B, same apk_sha256, prior_context NONE for fresh assessment,
+external_access NONE, tools_available empty. Allow exactly APK, ADMISSION_REPORT,
+ADMISSION_SPEC, PASS_B_INSTRUMENT, RUN_WRAPPER, PASS_B_EVENT_SCHEMA and
+PASS_B_LEDGER_SCHEMA, in that order, each with its own raw frozen schema bytes.
+Pin spec/instrument/wrapper/schema identities to the verified successor freeze,
+not arbitrary expected_artifacts supplied by a caller. Require literal0.1.5.
+CDM delivery_transport_sha256 binds exact NENV-1 bytes under TEXT-D2; it is
+distinct from the canonical APK/report identities. Before any assessment verify
+the raw envelope and shared members, all artifact pins and every Admission gate.
+CDM's own hash is detached; it is not listed inside itself. Run/control metadata
+may reference it; no source contents or analytical notes are added through metadata.
+The supplied APK artifact consists of manifest plus all hash-addressed node/source/
+declaration bytes; manifest hash is the APK identity, content hashes bind payloads.
+
+Explicit non-mappings:
+- Pass A claims, inventories, support judgments, confidence, findings, conclusions:
+  prohibited, not projected into B. No A artifact class accepted in B CDM.
+- B event/category/bridge results into Admission: none; Admission is completed
+  before analysis and never mutated by B output.
+- Join schema, quadrants, alignments or causal interpretations: none, not executed.
+- Reviewer-specific additions, expected answers, design reviews, arbitrary OTHER
+  artifacts: disallowed in an assessment CDM. This exposed design process is not
+  a clean model assessment and is not represented as one.
+- RAW PDF -> extracted text: no equivalence. TEXT-D2's separate original-regression
+  restrictions persist; no R1/R2/S1/K/heldout progression is unlocked.
+- Source availability -> actually read, used or independently reasoned: none.
+
+The contract checker tests a bounded mechanical subset, not a full Admission
+implementation or supplier authenticity. Full declaration/reconciliation semantics,
+correctness of scope, unseen exposure and classification truth require review.
+Fresh assessment isolation cannot be proven merely by an operator CDM.
+
+Bounded B delivery member naming: APK manifest.json is canonical RFC8785 JSON
+including its detached-identity field; payload members are node/<node_id>,
+source/<source_id>, declaration/<decl_id>. ADMISSION_REPORT uses report.json
+(canonical RFC8785 JSON). Each prose/spec/instrument/wrapper artifact uses content.txt; both schema
+artifacts use schema.json, with exact frozen file bytes. No extra member is permitted. verify_delivery checks these member
+bytes against the already checked package and frozen local artifact pins. This
+B member naming is an implementation profile of neutral NENV-1, not a change to
+its framing. Full Admission and independent freeze verification remain prerequisites.
+
+SHARED R2 CLARIFICATIONS — AD015 / TEXT-D2 / NENV-1, revision R2.1
+The underlying Input_Admission_v0.1.5.txt and its literal version/hash are unchanged.
+This addendum clarifies the existing contract; it adds no analytical artifact class,
+new transport framing, trust service, metric, semantic judgment or model authority.
+
+R2-P01/P02: remaining prose/spec/instrument/wrapper artifacts use exactly content.txt;
+event and ledger schema artifacts use exactly schema.json. No document alias.
+APK and ADMISSION_REPORT retain manifest.json and report.json and original payload
+members. PASS_B order is exactly APK, ADMISSION_REPORT, ADMISSION_SPEC,
+PASS_B_INSTRUMENT, RUN_WRAPPER, PASS_B_EVENT_SCHEMA, PASS_B_LEDGER_SCHEMA.
+Both the ordered CDM class sequence and transport sequence must match this list.
+A inventory-stage order and five classes remain as defined in frozen TEXT-D2.
+
+R2-P03: check_spec(version, supplied_bytes, trusted_sha256) is a bounded equality
+helper, not trusted-pin acquisition. Before calling it, an operator must verify the
+selected freeze against an independently established expected manifest identity,
+then obtain the required spec digest from that verified manifest. Never derive the
+expected trust anchor from the supplied CDM, spec bytes or arbitrary expected map.
+A helper pass alone does not satisfy preflight. A detached operator receipt must
+bind the verified neutral freeze/manifest, exact spec, verification outcome/time,
+run/stage, selected consumer freeze, CDM and delivery identity. Missing, unverified
+or mismatched receipt stops preflight before assessment. Receipt design is in the
+separately frozen operator R2 preflight contract; no receipt is a new CDM class.
+This requires existing independent trust, not a new trust-root service or runner.
+
+R2-S20: original supplied raw manifest and report must already be JCS-canonical,
+strictly decoded without duplicate keys, and accepted by the external Admission
+gate before any structured reserialization. Retain original bytes and rejection
+record; never silently normalize a rejected object. The detached preflight receipt
+binds raw digests and canonicality verification evidence. Equality of reconstructed
+bytes is valid only after this prerequisite; a structured object alone cannot prove it.
+
+R2-S21: evidential reference ranges are nonempty (0 <= start < end <= byte length),
+on Unicode codepoint boundaries. Empty supplied payloads remain valid metadata
+with zero length and empty-byte hash; they do not supply an empty evidence range.
+
+No full Admission implementation, actual model delivery, semantic reliability,
+calibration, PDF equivalence, original regression readiness or release approval.
+All existing gates and execution holds remain. A0.5 and its original binding record
+are unchanged; this revision does not migrate A to another freeze or authorize pairing.

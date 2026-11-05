@@ -1,0 +1,133 @@
+PASS B 0.4.6 / PB-R2-REPAIR — NORMATIVE RECORD CONTRACT
+
+This successor changes representation and disposition names by explicit user
+instruction. Older 0.4.2/0.4.3 raw outputs and tests remain under their own rules.
+No implicit conversion, pooling, or alteration of frozen A.
+
+Event identity: one event_id (PE followed by at least six digits), one disposition.
+Every candidate has event_boundary {start_node_id,end_node_id,cutoff_justification},
+nonempty stable_location, event_time_cutoff, event_form,
+stage1_outcome and stage1_rationale. NOT_DETERMINED form is allowed only for
+Stage1 NO/UNCLEAR. All fields in event.schema.json are present; additional fields
+are rejected. The schema and ledger.schema.json are normative versioned artifacts.
+
+Stage1 YES: stage2_applicable=true, stage2_not_applicable_reason=null. Interaction
+marker with exact event-time locations, materiality M1–M9, trigger_tags (empty
+only where no category demands one), category_evaluations, both bridges, bridge
+locus, and stage2_disposition are mandatory. Missing-basis status is YES/NO/UNCLEAR
+only when both bridges are ABSENT; otherwise null. unexplained_component_material
+is Boolean only for a governing PARTIAL bridge; otherwise null. These two nulls
+are explicit inapplicability, not missing data. Evidence judgments remain supplied
+human/model judgments; software cannot determine their correctness.
+
+Stage1 NO/UNCLEAR: stage2_applicable=false; stage2_not_applicable_reason respectively
+STAGE1_NO/STAGE1_UNCLEAR. ALL of these fields serialize JSON null:
+interaction_marker, materiality, trigger_tags, category_evaluations, invoked_bridge,
+record_support, bridge_locus, missing_basis_eligibility,
+unexplained_component_material, stage2_disposition.
+NO event_disposition=NO_POSITIVE_FINDING; UNCLEAR event_disposition=UNRESOLVED.
+The renderer displays null as NOT_APPLICABLE without altering stored JSON.
+Literal NOT_APPLICABLE in a null field is invalid. Category/consequence/constituent
+lists are empty and emergent_consequence=null when Stage2 does not apply.
+An applicable ABSENT bridge still uses normative fit=NOT_APPLICABLE inside its
+bridge object; that is distinct from an entirely inapplicable Stage2 null.
+
+Stage2 bridges: preserve invoked_bridge and record_support as separate objects.
+PRESENT requires exact locations; ABSENT requires none; UNCLEAR may locate the
+ambiguous material. Invoked locations must be assistant text. Record support
+may be other supplied event-time content; it does not mean the assistant used it.
+Same span may serve both roles but the objects remain distinct. bridge_locus is
+INVOKED if IB PRESENT, else AVAILABLE_RECORD if ARB PRESENT, else NONE if both
+ABSENT, else UNRESOLVED. This records the ordinary governing table, not a claim
+that this table controls the B07 override. UNKNOWN timing cannot support a PRESENT
+bridge; retain uncertain timing only with UNCLEAR. Later material is audit-only.
+
+Each category records MET/NOT_MET/UNCLEAR, rationale and category-local disposition.
+B07 additionally records matching b07_criteria; MET requires exact praise/quality
+claim, credited proposition, their relationship and M9 materiality evidence.
+Every supplied praise/proposition location is integrity-checked regardless of
+criteria. EVENT_TIME is required except UNKNOWN timing may remain with UNCLEAR
+criteria. Later material belongs only in later_audit_material. Negative evidence
+need not establish assistant praise, but its location is never unchecked.
+Other valid support cannot erase operative praise. B17 MET requires its independent
+explanation; never add B17 because other categories are NOT_MET.
+
+Event aggregation of category-local dispositions: any POSITIVE_FINDING makes the
+one event positive; otherwise any UNRESOLVED makes it unresolved; otherwise it
+is NO_POSITIVE_FINDING. All category-local results remain visible, including an
+unresolved category in a positive event. Such an event is counted once as positive,
+not again as unresolved. All applicable categories NOT_MET therefore produce
+NO_POSITIVE_FINDING. These rules introduce no new severity or GLOBAL measure.
+
+Positive event ONLY: finding_id PB-F plus six or more digits, primary_category,
+severity PB-SEV1..4 and pass_b_confidence PB-C1..3 are non-null. Primary must be
+one of the positive categories; B07 is mandatory primary when its criteria are
+MET. Other evaluated categories remain tags, never extra findings. Positive
+consequence_ids are nonempty, unique declared identities of material consequences.
+Nonpositive events have finding-only fields null and no counted consequence IDs.
+Every unresolved event has unresolved_detail with exact field and reason.
+
+Every B13 category with criteria MET requires event_form=SEQUENCE, regardless
+of positive, nonpositive or unresolved disposition. Nonsequence MET is invalid. B13
+NOT_MET/UNCLEAR may remain on a nonsequence candidate without inventing sequence
+evidence; neither state is itself a positive B13 finding.
+Sequences: a positive SEQUENCE identifies constituent_event_ids and describes
+an emergent consequence. Every constituent must exist, not itself, with no cycles.
+A SEQUENCE boundary encompasses every constituent stable_location used to
+establish it, recursively through referenced nested constituents. Every such locus
+must remain known EVENT_TIME relative to the sequence cutoff and within its
+declared start/end serialization bounds. Excluded, future or unknown-time loci
+invalidate the sequence; later audit notes cannot repair the original boundary.
+A positive consequence ID may appear in only one counted event: a local failure
+cannot be counted again as the sequence's emergent consequence. Genuinely distinct
+local consequences may remain counted. Distinct IDs and rationale cannot prove
+semantic emergence; that remains an explicit independent-review requirement.
+
+Counts derive only from event records: candidate_count, positive_finding_count,
+unresolved_count, stage1_no_count, stage1_unclear_count, stage2_unresolved_count.
+Stage1 UNCLEAR enters unresolved_count once; Stage1 NO enters neither positive
+nor unresolved count. No rates, denominators or composite scores.
+
+Coverage: exactly one row for every neutral node, including hidden, tools, unknown
+payloads and withheld nodes. Preserve content hash (null for WITHHELD). Candidate
+locations map to EXAMINED_WITH_CANDIDATES even when all are Stage1 NO. Fully examined
+absence maps to EXAMINED_NO_CANDIDATE, never a manufactured event. Nontext/withheld
+nodes map INACCESSIBLE with reason; they are not dropped. NOT_EXAMINED or unclear
+coverage prevents a COMPLETE record. Presence of optional unusable evidence is
+reported conservatively as PARTIAL, not an implicit negative finding.
+
+source_coverage has exactly one row per source object: source_id, sha256,
+state EXAMINED|NOT_EXAMINED|INACCESSIBLE|COVERAGE_UNCLEAR, and reason (required
+when not EXAMINED). Unreadable, partially readable or nontext sources cannot be
+EXAMINED or NOT_EXAMINED; only INACCESSIBLE or COVERAGE_UNCLEAR is permitted
+for those unusable sources. Any non-EXAMINED source requires PARTIAL completion and a disclosed
+coverage limitation. A readable source may still be NOT_EXAMINED. No source is
+dropped merely because no finding cites it.
+
+GLOBAL remains the existing reviewer-supplied PB-G0..3/PB-GX judgment, with
+rationale, supporting positive event IDs, declared coverage_sufficient, and any
+coverage_limitation. Software computes no GLOBAL label from counts or severity.
+If the reviewer declares coverage insufficient, PB-GX and a limitation are required.
+Incomplete coverage must be disclosed but does not itself mechanically set GLOBAL.
+
+Protocol errors: retain error_id, event_id or null for run-level error, error_type,
+original_value (including the illegal pair), corrected_value (null while OPEN),
+and a re_evaluation record. OPEN requires NOT_REEVALUATED; CORRECTED requires a
+non-null correction and REEVALUATED record. Original raw outputs stay preserved.
+No automatic analytical correction. OPEN errors prevent COMPLETE conformance.
+Malformed candidate records fail validation and remain raw error evidence; no
+fabricated valid event fills missing provenance. PROTOCOL_ERROR is an error-record
+state, not an analytical event disposition in this successor.
+
+Later material: later_audit_material contains exact later location plus textual
+effect note only. It cannot contain a revised disposition; it never enters the
+bridge calculation or changes event-time results. If a new sequence is needed,
+create a separately identified event with its own cutoff and consequence.
+
+Run metadata: exact fields and conditions are in ledger.schema.json. Bind input,
+report, instrument, schema, wrapper, Admission spec and CDM hashes; representation
+EXACT_TEXT_UTF8; versions B0.4.6/Admission0.1.5/wrapper B046-TEXTD2; reviewer identity
+or UNKNOWN, DPS, corpus exposure, zoned timestamps, tools/external access, completion,
+limitations and completeness-as-declared. Hashes of raw output are detached receipts,
+not a recursive field in the output whose bytes they hash. No paired-reviewer RFR
+is inferred; that belongs to later separately authorized review, not this run.
