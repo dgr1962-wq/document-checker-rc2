@@ -1,0 +1,36 @@
+R3.1 APPEND-ONLY EVIDENCE CLARIFICATION — S04
+1. Historical evidence remains immutable
+This new record qualifies, without rewriting, OP-R2 historical evidence addendum
+lines 10-15 and successor R2 repair-ledger S04 limitations. All original receipts,
+logs, counts, hashes, reviewers' wording and frozen statements remain unchanged.
+
+2. Initial red-run environment
+Dependency versions for the initial R2 red run were not captured as initial-run
+runtime provenance and remain UNKNOWN. Initial interpreter/external dependency
+identities not contemporaneously evidenced also remain UNKNOWN. The initial
+receipt does bind its enumerated local test, fixture, validator, schema and vendor
+file bytes; this does not establish complete original-environment reproducibility.
+Earlier statements that the R2 baseline or its dependencies were fully hash-bound
+are narrowed to those enumerated captured local files, not the complete original
+runtime environment. Missing older R1 red-time provenance remains UNKNOWN too.
+
+3. Later replay evidence
+successors/R2-20261104/verification/replay-dependencies.json describes only the
+later independent replay environment, as its scope field states. Later evidence
+cannot authenticate, replace or retroactively reconstruct initial-run provenance.
+Do not backfill historical versions, hashes, authentication or compliance from
+that replay, from a current environment, or from another run. No rerun can restore
+missing initial-run evidence. No claim is made that environments actually differed.
+The existing R2 completion STATUS lines 37-43 already states this distinction.
+
+4. Prospective requirement remains in force
+The existing sealed R2-S04 requirement remains: before future red runs and before
+repair, bind tests, fixtures, validators, schemas and relevant runtime/dependency
+provenance. This reiterates the existing prospective obligation and requires no
+new control, trust service or instrumentation. It does not imply it was fully
+satisfied for the initial R2 external runtime dependencies. Unknown history stays
+unknown; known local-file hashes are neither discarded nor upgraded by replay.
+
+5. Scope
+Documentation/evidence clarification only. No behavioral red test is warranted.
+All analytical behavior, comparator behavior, schemas and execution holds remain.

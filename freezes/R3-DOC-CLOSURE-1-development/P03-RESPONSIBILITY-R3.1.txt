@@ -1,0 +1,48 @@
+R3.1 DOCUMENTATION SUPPLEMENT — P03 RECEIPT SELECTION AND RESPONSIBILITY
+1. Scope and precedence
+This normative operator/interface supplement clarifies B046 wrapper lines 17-21
+and OP-R2.1 PREFLIGHT steps 5-7. Read them with this supplement. It is operator
+control documentation, not a replacement analytical RUN_WRAPPER artifact or a
+new CDM member. Existing B046 wrapper bytes, CDM/runtime bindings, freeze pins,
+analytical schemas and classification behavior remain unchanged. No runtime
+bypass has been demonstrated. No code behavior or comparator field is changed.
+
+2. Operator obligation before assessment
+The operator must obtain and select exactly one independently verified OP-R2.1
+preflight receipt for the specific run and stage before delivery for assessment.
+The operator remains responsible for independent trust acquisition, verification
+and selection; matching caller-authored declarations cannot establish trust.
+Missing, unverified, ambiguous or mismatched receipt selection stops preflight.
+This explicitly documents the existing external preflight obligation; it neither
+implements a new behavioral gate nor asserts a new runtime capability.
+
+3. Exact selection and retained association
+Within existing external run-control records, retain the selected receipt bytes,
+retained location and their detached SHA-256 digest. Bind that exact selection to
+run_id, stage, consumer, exact CDM raw digest and canonical identity, delivery
+transport identity, and the receipt's verified consumer/neutral freeze identities.
+For a specific execution, record exactly one selected receipt; other retained
+receipts are not implicitly selected by sharing the same run/CDM identity.
+After an otherwise separately authorized execution, retain its detached raw-output
+digest association with this same selection in the existing external run-control/
+output-receipt records. Do not claim an output digest before output exists.
+These are documentary obligations, not added fields in OP-R2.1 comparator inputs,
+analytical output, CDM or schemas. The association remains detached; neither the
+CDM nor envelope references the receipt, so no recursive hashing is introduced.
+
+4. Wrapper responsibility
+The B wrapper consumes the operator-declared verified run context under this
+external prerequisite. It does not acquire or authenticate the trust root.
+In wrapper lines 17-21, requiring a verified receipt is the operator's pre-delivery
+obligation, not a command for the assessing model to inspect an absent receipt.
+The assessing model neither receives nor verifies the detached operator receipt
+and must not state or imply that it did. No additional analytical input or field
+is required. Existing run/CDM binding and fail-closed preflight wording remain.
+
+5. Limits and holds
+A retained digest association does not prove operator authenticity or causal
+runtime consumption. Independent verified preflight remains mandatory. This
+supplement adds no trust service, runner, runtime instrumentation, schema change,
+metric, threshold, corpus rule, or Pass A/Pass B analytical change. It does not
+claim historical executions had this selection evidence. All execution holds
+remain; this documentation freeze alone never authorizes a controlled run.
