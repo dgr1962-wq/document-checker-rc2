@@ -1,0 +1,8 @@
+Document Checker RC2 — Experimental Development Preview 1
+Public project identity: Any Key Cafe / Little Oogway
+Copyright 2026 Darren Russell, to the extent of copyrightable contributions and rights he holds.
+Project material is distributed under Apache License 2.0. This statement does not assert exclusive copyright in AI-generated material or ownership of upstream components.
+
+Darren Russell initiated, directed and independently funded the project, supplied design decisions, reviewed the work and authorized the release preparation. ChatGPT and Claude contributed drafting and design review. Codex contributed implementation, consolidation, deterministic testing, preservation and packaging. AI assistance was substantial; this is not represented as exclusively human-authored. Darren is the responsible human publisher. Provider attribution does not imply endorsement.
+
+Bundled rfc8785 0.1.4 is an upstream component by Trail of Bits. Its metadata, Apache-2.0 license and source notices are preserved under each component's vendor directory. Its implementation credits adaptations from Andrew Rundgren's reference implementation, also under Apache-2.0. No vendored source has been modified.
