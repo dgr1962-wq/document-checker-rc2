@@ -1,0 +1,21 @@
+test_empty_payload_length_still_valid (test_r2_contract.Contract.test_empty_payload_length_still_valid) ... ok
+test_exact_names_in_contract (test_r2_contract.Contract.test_exact_names_in_contract) ... ok
+test_helper_documents_external_precondition (test_r2_contract.Contract.test_helper_documents_external_precondition) ... ok
+test_nonempty_range (test_r2_contract.Contract.test_nonempty_range) ... ok
+test_N01_codepoint_boundary (test_repairs.Repairs.test_N01_codepoint_boundary) ... ok
+test_N01_no_source_node_conflation (test_repairs.Repairs.test_N01_no_source_node_conflation) ... ok
+test_N01_separate_source_domain (test_repairs.Repairs.test_N01_separate_source_domain) ... ok
+test_N02_boolean_rejected (test_repairs.Repairs.test_N02_boolean_rejected) ... ok
+test_N02_empty_and_withheld (test_repairs.Repairs.test_N02_empty_and_withheld) ... ok
+test_N02_wrong_node_length (test_repairs.Repairs.test_N02_wrong_node_length) ... ok
+test_N02_wrong_source_length (test_repairs.Repairs.test_N02_wrong_source_length) ... ok
+test_N03_pinned_spec (test_repairs.Repairs.test_N03_pinned_spec) ... ok
+test_N03_wrong_spec (test_repairs.Repairs.test_N03_wrong_spec) ... ok
+test_N04_binary_remains_unsupported (test_repairs.Repairs.test_N04_binary_remains_unsupported) ... ok
+test_N04_exact_envelope (test_repairs.Repairs.test_N04_exact_envelope) ... ok
+test_N04_raw_change_detected (test_repairs.Repairs.test_N04_raw_change_detected) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.001s
+
+OK

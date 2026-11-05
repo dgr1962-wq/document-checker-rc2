@@ -1,0 +1,13 @@
+test_A_external_stage_controls (test_receipt.Receipt.test_A_external_stage_controls) ... ok
+test_every_binding_mismatch (test_receipt.Receipt.test_every_binding_mismatch) ... ok
+test_matching_synthetic_control (test_receipt.Receipt.test_matching_synthetic_control) ... ok
+test_missing (test_receipt.Receipt.test_missing) ... ok
+test_missing_binding (test_receipt.Receipt.test_missing_binding) ... ok
+test_no_timezone (test_receipt.Receipt.test_no_timezone) ... ok
+test_stage_consumer_mismatch (test_receipt.Receipt.test_stage_consumer_mismatch) ... ok
+test_unverified_context (test_receipt.Receipt.test_unverified_context) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.001s
+
+OK

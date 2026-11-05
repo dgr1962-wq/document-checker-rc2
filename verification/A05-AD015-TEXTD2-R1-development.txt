@@ -1,0 +1,22 @@
+test_A01_duplicate_unit_rejected (test_repairs.Repairs.test_A01_duplicate_unit_rejected) ... ok
+test_A01_normative_split_policy (test_repairs.Repairs.test_A01_normative_split_policy) ... ok
+test_A01_shared_target_spans (test_repairs.Repairs.test_A01_shared_target_spans) ... ok
+test_A02_no_retro_to_contemporary (test_repairs.Repairs.test_A02_no_retro_to_contemporary) ... ok
+test_A02_other_tier_portions (test_repairs.Repairs.test_A02_other_tier_portions) ... ok
+test_A02_reject_prior_in_unknown (test_repairs.Repairs.test_A02_reject_prior_in_unknown) ... ok
+test_A02_unknown_separate (test_repairs.Repairs.test_A02_unknown_separate) ... ok
+test_A03_mixed_success_precedence (test_repairs.Repairs.test_A03_mixed_success_precedence) ... ok
+test_A03_partial_only (test_repairs.Repairs.test_A03_partial_only) ... ok
+test_A03_unknown_not_partial (test_repairs.Repairs.test_A03_unknown_not_partial) ... ok
+test_A04_node_still_excluded (test_repairs.Repairs.test_A04_node_still_excluded) ... ok
+test_A04_source_anchor (test_repairs.Repairs.test_A04_source_anchor) ... ok
+test_A06_missing_receipt (test_repairs.Repairs.test_A06_missing_receipt) ... ok
+test_A06_raw_bytes_binding (test_repairs.Repairs.test_A06_raw_bytes_binding) ... ok
+test_A06_valid_receipt (test_repairs.Repairs.test_A06_valid_receipt) ... ok
+test_A06_wrong_run (test_repairs.Repairs.test_A06_wrong_run) ... ok
+test_A06_wrong_stage (test_repairs.Repairs.test_A06_wrong_stage) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.002s
+
+OK

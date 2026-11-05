@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "at": "2026-11-05T01:54:04.307778+00:00",
+  "suites": [
+    {
+      "component": "AD015-TEXTD2-R1-development",
+      "tests": 12,
+      "exit_code": 0,
+      "log_sha256": "a9c3705d4f6f2dd7c0c38075220f00a3165e20c344022738cc7b4f46bc08b131"
+    },
+    {
+      "component": "A05-AD015-TEXTD2-R1-development",
+      "tests": 17,
+      "exit_code": 0,
+      "log_sha256": "dd6607dc3a52c95fdfb63c2d635354a9f3446705f9f15e730e3b8e88cfa9022c"
+    },
+    {
+      "component": "AD015-TEXTD2-R2-development",
+      "tests": 16,
+      "exit_code": 0,
+      "log_sha256": "42a5119aedac9dcea5568047357e124d3cd22d7791db05449efb16da7de3dfda"
+    },
+    {
+      "component": "B046-AD015-TEXTD2-R2-development",
+      "tests": 121,
+      "exit_code": 0,
+      "log_sha256": "c8bc679968e69f4d1b57d79da9dd47d67731cfba779de19c5ddfb483c178e31e"
+    },
+    {
+      "component": "OP-PREFLIGHT-R2-development",
+      "tests": 8,
+      "exit_code": 0,
+      "log_sha256": "fa2927ff48b61f1a4d0621bbc858a75d3e4329622735fe406c4860792bc686ca"
+    }
+  ],
+  "total_tests": 174,
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "dependencies": {
+    "jsonschema": "4.10.3",
+    "attrs": "23.2.0",
+    "pyrsistent": "0.20.0"
+  },
+  "scope": "current clean-copy deterministic helper/contract replay, not historical provenance or analytical assessment",
+  "model_or_assessment_requests": 0,
+  "downloads_installs_spending": 0
+}
