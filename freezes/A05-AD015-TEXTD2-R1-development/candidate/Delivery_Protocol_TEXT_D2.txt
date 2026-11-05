@@ -1,0 +1,49 @@
+DOCUMENT CHECKER — TEXT-D2 / NENV-1 DEVELOPMENT DELIVERY
+Successor to frozen TEXT-D1, which remains unchanged. No original PDF R1/R2, S1/K
+or heldout progression is unlocked. No automatic transmission, retries or Join.
+paid_regression_allowed=false; join_allowed=false. A local freeze is not permission.
+
+Scope: A0.5 and B0.4.5 with Admission0.1.5, separately delivered. No retroactive
+conversion of old inputs/results. This transport supports strict UTF8 member bytes
+only; unsupported binary input stops, retaining originals. No OCR/parser/derivative
+substitution is performed. It does not establish PDF equivalence or authenticity.
+
+NENV-1 is RFC8785 canonical JSON encoded UTF8:
+{transport_version:"NENV-1", artifacts:[{artifact_class, identity_sha256,
+ members:[{name,text,raw_sha256}]}]}. Member names are unique within an artifact and
+sorted lexically; artifact order is the CDM delivery_order. Each text re-encodes
+to exactly the original member bytes with no normalization. No duplicate keys,
+invalid Unicode, noncanonical framing or repeated artifact classes are accepted.
+Names are logical identifiers, never filesystem paths to execute.
+
+APK members: manifest.json is the exact supplied manifest representation;
+node/<node_id>, source/<source_id>, declaration/<decl_id> carry every retained
+payload/basis. WITHHELD has no invented member. Identity is H5 JCS manifest hash,
+not the envelope/member hash. Each payload hash and length must recompute and
+every Admission gate must independently pass. Report member report.json retains
+exact supplied bytes; its identity is its H2 canonical report hash. All remaining
+artifacts use content.txt or schema.json, retaining their exact frozen raw bytes
+and raw-byte identity. This is a defined transport, not a complete APK validator.
+
+The raw envelope digest is CDM.delivery_transport_sha256. CDM and any output are
+not inside the envelope, avoiding cycles. Retain exact envelope bytes beside the
+CDM, raw/structured identities and the independently verified neutral freeze pin.
+Decode and check canonical framing/member hashes; separately verify semantic IDs,
+expected artifact identities, versions, payload lengths and full Admission gates.
+A/B envelopes differ; paired shared-input identity requires equal APK/report
+semantic IDs AND identical shared members/names/raw bytes. No paired run is now
+authorized and no Join is implemented by these comparisons.
+
+B delivery order: APK, ADMISSION_REPORT, ADMISSION_SPEC, PASS_B_INSTRUMENT,
+RUN_WRAPPER, PASS_B_EVENT_SCHEMA, PASS_B_LEDGER_SCHEMA. Schemas are independent
+raw-byte artifacts, never silently appended under a prose hash.
+A inventory-stage delivery: APK, ADMISSION_REPORT, ADMISSION_SPEC,
+PASS_A_INSTRUMENT, RUN_WRAPPER. Classification-stage delivery extends its own
+control context only with the exact same-run inventory and verified receipt as
+defined in A0.5; preserve stage CDMs and their relationship. No opposite-pass
+analytics, expected classifications or design reviews enter assessment contexts.
+
+Malformed/unsupported transport or missing pins stops before analysis. Retain raw
+failure evidence; do not repair or retry automatically. Any future actual-model
+settings, limits, cost and transport compatibility need separate preflight and
+explicit authorization. No current endpoint capability is inferred here.

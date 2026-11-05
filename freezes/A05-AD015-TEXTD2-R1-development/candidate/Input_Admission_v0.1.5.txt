@@ -1,0 +1,335 @@
+DOCUMENT CHECKER — INPUT ADMISSION SPECIFICATION v0.1.5 (CONSOLIDATED DRAFT)
+0. Status, lineage, authorship
+
+DRAFT DESIGN CANDIDATE. This spec is not validated, calibrated or approved for production use. No claim of real-world reliability or formal validation is made for it.
+
+This is a new document. Pass A v0.1 §3.1 remains unchanged in the development record. Pass A v0.2 hands admission over to this spec.
+
+Authorship and exposure. Drafted at coordinator direction by Claude Opus 5.5 (Anthropic). The drafting context also ran the Pass B v0.4.1 debug run and the adversarial review of Pass A v0.1 and Join v0.1. Relative to this spec, Pass A v0.2 and Join v0.2, that context is DPS3. It is inadmissible as a formal-validation reviewer of any of them.
+
+Consolidation provenance: Codex applied only the Admission clauses of CA-1.1,
+CC-2 section5 and CC-3 section3. Historical drafting exposure remains as recorded
+above; this consolidation is not independent review. Earlier delivered packets
+remain governed by their own exact bytes. No existing hash or result is migrated.
+The clauses below are consolidated; no external patch precedence is needed.
+Codex 0.1.4 corrections are exposed design work, not independent review.
+A development freeze records exact bytes and local tests, not validation.
+R1 successor lineage: parent is frozen Admission 0.1.4. Historical authorship and
+exposure are retained; new changes are exposed coordinator work for N-01..N-04.
+No historical report, input or hash is upgraded. Section numbers are normative.
+
+1. Purpose and neutrality
+
+1.1 Admission turns operator-supplied material into one Admitted Package (APK).
+
+Pass A and Pass B both receive the APK byte-for-byte unchanged.
+The Join uses it only to verify locations.
+
+1.2 Admission is mechanics only. It does not do any of the following:
+
+identify claims, propositions, quotations, events or findings;
+judge relevance, support, materiality, authenticity or reliability;
+infer whether any content was read, attended to or used.
+
+1.3 Admission runs before either pass, and no pass output may influence the admission of the package that pass analyses.
+
+2. Scope of v0.1.5
+
+2.1 Closed package. An APK contains:
+
+the original conversation, as represented; and
+source objects that were part of the original session, each carrying an availability marker (§5).
+
+2.2 No reviewer-only additions. A source whose supplier-declared origin is REVIEWER_ADDED causes rejection under ADM-08. External augmentation is reserved for a future, separate protocol and must not be approximated under v0.1.5.
+
+2.3 Unknown stays unknown. Missing availability, origin, completeness, visibility or ordering information is recorded as UNKNOWN and is never inferred.
+
+2.4 No silent repair. Admission never edits, reorders, drops or relabels supplied content.
+
+Any correction requires a new apk_id, parent_apk_id, incremented apk_version and new apk_sha256.
+Earlier submissions and their admission reports are kept.
+3. Operator submission
+
+The operator supplies:
+
+the raw conversation export or exports;
+the source objects;
+a submission manifest declaring the §4 and §5 fields for every node and source;
+the normalization profile (§6);
+provider or supplier declarations, each with its stated basis and a reference to it.
+4. Canonical node model
+4.1 Identifier formats
+Kind	Regex
+Message-text node	^M[0-9]{6,}$
+Operational node	^OP[0-9]{6,}$
+Source object	^SRC[0-9]{6,}$
+Turn	^T[0-9]{6,}$
+Declaration reference	^DECL[0-9]{6,}$
+
+Identifiers are unique within an APK. Unchanged objects may retain IDs in a
+new package version; changed content or metadata requires a fresh ID and mapping.
+An ID must never identify different objects within a lineage.
+
+4.2 Ordering
+
+Every node carries seq, a positive integer unique within the APK. Together seq values give serialization order, not temporal order inside NOT_PRESERVED turns.
+
+Where the export preserves it, an assistant turn that interleaves text and operational activity is split into separate nodes in the order they occurred.
+
+4.3 Node schema
+node {
+  node_id                       string  (M… | OP…)
+  seq                           integer ≥ 1, unique
+  turn_id                       string  (T…)
+  node_kind                     MESSAGE_TEXT | OP_CALL | OP_RESULT | ATTACHMENT_REF
+                                | UNKNOWN_PAYLOAD | WITHHELD
+  role                          USER | ASSISTANT | SYSTEM_OR_OPERATOR | TOOL | UNKNOWN
+  content_encoding              UTF8 | BINARY | NONE
+  content_sha256                hex | null            (null only if WITHHELD)
+  content_length_bytes          integer | null
+  text_rendering                TEXT | NONE
+  caption_sha256                hex | null            (caption metadata; never content)
+  ui_visibility                 VISIBLE | HIDDEN | UNKNOWN
+  assistant_context_visibility  VISIBLE | NOT_VISIBLE | UNKNOWN
+  truncation_state              NONE | TRUNCATED_AT_SOURCE | UNKNOWN
+  op_link                       null | {
+                                  call_node_id    string (OP…)
+                                  target_descriptor_sha256  hex | null
+                                  result_state    SUCCESS | ERROR | EMPTY | UNKNOWN
+                                  result_state_basis  RECORD_EVIDENCED | PROVIDER_DECLARED | UNKNOWN
+                                }
+  delivers_source_ids           [SRC…]
+  declaration_refs              [DECL…]
+}
+4.4 Turn schema
+turn {
+  turn_id               string
+  role                  USER | ASSISTANT | SYSTEM_OR_OPERATOR | TOOL | UNKNOWN
+  node_ids              [node_id]  (ascending seq)
+  interleaving_status   PRESERVED | NOT_PRESERVED | NOT_APPLICABLE
+}
+4.5 Node rules
+R-N1. An operational node is never dropped because ui_visibility = HIDDEN.
+R-N2. A structured payload of unknown type becomes UNKNOWN_PAYLOAD with text_rendering = NONE, and its bytes are hashed. A caption goes in caption_sha256 and is never treated as the payload’s content.
+R-N3. Content that was not supplied (for example, a withheld system prompt) becomes a WITHHELD node and is logged.
+R-N4. Within a turn whose interleaving_status = NOT_PRESERVED, seq values have no temporal meaning relative to one another and must not be used to order nodes of that turn.
+R-N5a. NOT_APPLICABLE is allowed only for single-node turns. Each node is
+listed exactly once; node and turn roles agree except TOOL operational nodes
+may occur in ASSISTANT turns. MESSAGE_TEXT IDs use M; other kinds use OP.
+seq and byte lengths are integers, never booleans. Unknown enums are rejected.
+R-N5b. OP_RESULT op_link names an existing OP_CALL. Unless same-turn order is
+NOT_PRESERVED, the call precedes the result. Every delivered_by_node_id exists
+and source_id occurs in its delivers_source_ids, and vice versa. Declaration
+references resolve to retained declarations and hashed basis bytes.
+WITHHELD has no supplied bytes, null hash/length, NONE encoding/rendering.
+R-N5c. Every supplied node/source length is a nonnegative integer excluding
+booleans, equal to the number of retained raw bytes. Null is permitted only for
+WITHHELD, which has no supplied bytes. Empty supplied payloads have length zero
+and the SHA256 of empty bytes even if encoding NONE; they are not WITHHELD.
+Violations reject under ADM-02 (type/schema violations also ADM-01).
+R-N5. result_state reports what the provider or export says happened. Admission makes no interpretation of it.
+5. Source objects and availability
+5.1 Schema
+source_object {
+  source_id                   string (SRC…)
+  media_type                  string
+  sha256                      hex
+  length_bytes                integer
+  title_or_identifier         string (as supplied)
+  supplier_declared_origin    ORIGINAL_SESSION | REVIEWER_ADDED | UNKNOWN
+  delivery_route              ATTACHED_IN_MESSAGE | RETURNED_BY_OP | PROVIDER_CONTEXT | UNKNOWN
+  delivered_by_node_id        node_id | null
+  available_first_seq         integer | null
+  availability_basis          RECORD_EVIDENCED | PROVIDER_DECLARED | UNKNOWN
+  availability_declaration_ref  DECL… | null
+  completeness_declaration    COMPLETE_AS_DECLARED | EXCERPT | UNKNOWN
+  completeness_declared_by    SUPPLIER | PROVIDER | NONE
+  reviewer_readable           READABLE | PARTIALLY_READABLE | UNREADABLE
+  truncation_state            NONE | TRUNCATED_AT_SOURCE | UNKNOWN
+}
+5.2 Rules
+R-S1. RECORD_EVIDENCED requires delivered_by_node_id, and then available_first_seq equals that node’s seq.
+R-S2. PROVIDER_DECLARED requires both available_first_seq and availability_declaration_ref. available_first_seq must equal the seq of an existing node. That node’s turn is the source’s availability turn.
+R-S3. UNKNOWN requires available_first_seq = null and delivered_by_node_id = null.
+R-S3a. Known availability anchors to an existing node with
+assistant_context_visibility = VISIBLE; otherwise reject ADM-07. Do not silently
+repair visibility or availability. PROVIDER_DECLARED without a delivery node
+uses the node at available_first_seq as its visibility and turn anchor. If a
+delivery node is supplied it must have that same seq. RECORD_EVIDENCED links
+are reciprocal under R-N5b. Declarations never establish reading.
+R-S4. supplier_declared_origin = REVIEWER_ADDED means rejection. UNKNOWN origin is admitted with warning ADM-W06.
+R-S5. “Available at seq n” means only that, on the stated basis, the content entered assistant-visible context at n. It does not mean the content was read, attended to or used. Admission records no reading.
+R-S6. COMPLETE_AS_DECLARED describes the supplied object as the supplier declares it to be. It makes no claim about any original work, edition or live resource, and admission does not verify it.
+R-S6a. reviewer_readable is a supplier declaration about the intended route,
+not proof of reading. For a text-only run, an object without a supplied strict
+UTF8 text representation is UNREADABLE on that route. Preserve original bytes;
+a PDF text derivative is a different, explicitly declared representation, not
+an exact-byte replacement. An inconsistent declaration requires resubmission.
+R-S7. Source material embedded in message text (pasted quotations, reported contents) is not split out at admission. It stays as message bytes, and identifying it is pass-level analysis.
+6. Normalization, offsets, hashing
+H1. All hashes are SHA-256, written as lowercase hex.
+H2. A structured object is hashed over its RFC 8785 (JCS) canonical JSON, with the object’s own hash field left out.
+H3. normalization_profile must be EXACT_TEXT_UTF8. Do not normalize Unicode, newlines, whitespace or typography of decoded source message text. Original container bytes are separately hashed; offsets refer to exact admitted text encoded UTF8, not JSON escape syntax. Nontext or invalid text remains explicitly unassessable; do not fabricate a text replacement. ADM-01 and ADM-09 use this single enum.
+H4. Every pass uses typed, disjoint NODE and SOURCE byte-offset domains. A NODE
+range uses <node_id>@B<start>-B<end>; a SOURCE range uses
+<source_id>@B<start>-B<end>. Each range addresses exactly one object, zero-based
+and end-exclusive, with decimal positions zero-padded to at least six digits.
+Node IDs and source IDs never alias. Source ranges address retained strict UTF8
+source bytes, not delivery-node text. Validate hash, object identity, bounds and
+Unicode codepoint boundaries; binary/unrendered payloads have no invented ranges.
+H4a. Decode structured JSON with duplicate keys rejected, finite JCS-compatible
+numbers only and strict Unicode scalar strings. No duplicate-key last-value
+interpretation. Invalid payload text may be retained as BINARY with no text
+rendering, never repaired. Non-JCS manifests/reports are rejected.
+H5. apk_sha256 is the hash over the JCS of the APK manifest (§8.1), which includes the hash of every node and source.
+7. Gate checks
+Code	Check	On failure
+ADM-01	Manifest validates against §§4–5 schemas and R-N5a/b	REJECT
+ADM-02	Every supplied content/source hash AND length recomputes from retained raw bytes	REJECT
+ADM-03	seq values are unique integers; turn membership is consistent with seq order; each turn occupies one contiguous seq block and turns are ordered by their blocks	REJECT
+ADM-04	IDs are well-formed and unique	REJECT
+ADM-05	Every node is in exactly one turn; every turn declares interleaving_status	REJECT
+ADM-06	Required fields are present (UNKNOWN is allowed where enumerated)	REJECT
+ADM-07	Rules R-S1 to R-S3a hold	REJECT
+ADM-08	No source has REVIEWER_ADDED origin	REJECT
+ADM-09	Normalization is declared and reproducible	REJECT
+ADM-W01	UNKNOWN_PAYLOAD nodes are present	WARN (count, IDs)
+ADM-W02	Nodes with ui_visibility = HIDDEN are present	WARN
+ADM-W03	Truncation is present or UNKNOWN	WARN
+ADM-W04	WITHHELD nodes are present	WARN
+ADM-W05	Sources with UNKNOWN availability are present	WARN
+ADM-W06	Sources with UNKNOWN origin are present	WARN
+ADM-W07	Turns with interleaving_status = NOT_PRESERVED are present	WARN
+ADM-W08	Nodes with UNKNOWN assistant_context_visibility are present	WARN
+8. Outputs
+8.1 APK manifest
+apk_manifest {
+  apk_id, apk_version (integer), parent_apk_id | null
+  admission_spec_version   "0.1.5"
+  normalization_profile, normalization_description | null
+  turns [turn], nodes [node], sources [source_object], declarations [{decl_id, declared_by, basis_text_sha256}]
+  apk_sha256
+}
+8.2 Admission report
+admission_report {
+  report_id, apk_id, apk_sha256
+  outcome          ADMITTED | ADMITTED_WITH_WARNINGS | REJECTED
+  reject_codes     [ADM-0x]
+  warning_codes    [{code, ids}]
+  counts           {nodes, sources, unknown_availability_sources, hidden_nodes,
+                    withheld_nodes, unknown_payload_nodes, not_preserved_turns}
+  source_completeness {
+    status RECONCILED_AS_DECLARED | UNVERIFIED | KNOWN_INCOMPLETE,
+    original_artifact_sha256 [hashes], original_inventory_sha256 hash|null,
+    canonical_inventory_sha256 hash, reconciliation_sha256 hash|null,
+    declared_boundary string, limitations [string]
+  }
+  produced_at      RFC 3339
+  report_sha256
+}
+
+Both passes receive byte-identical APKs and admission reports. Matching delivery
+is not proof of absolute completeness of the original interaction.
+A reconciliation accounts for every original message/artifact within the declared
+boundary, including hidden, withheld, unreadable and nontext items. Missing, extra
+and transformed items are recorded; no silent pruning.
+RECONCILED_AS_DECLARED requires retained hashes, inventories, and an exact mapping
+or documented representation for every item. It does not prove that a provider
+exported everything. UNVERIFIED and KNOWN_INCOMPLETE permit preservation and
+exploratory review only; formal paired conformance is deferred.
+
+9. Shared run-control mechanics
+9.1 Context Delivery Manifest (CDM)
+
+The operator produces a CDM for every pass run and for the Join run. It records everything delivered into that run’s context.
+
+cdm {
+  cdm_id, run_id
+  consumer            PASS_A | PASS_B | JOIN
+  operator_id, created_at
+  apk_sha256
+  delivered_artifacts [{
+     artifact_id, sha256, delivery_order (integer),
+     artifact_class   APK | ADMISSION_REPORT | ADMISSION_SPEC | PASS_A_INSTRUMENT
+                      | PASS_B_INSTRUMENT | PASS_B_EVENT_SCHEMA | PASS_B_LEDGER_SCHEMA | JOIN_SPEC | PASS_A_OUTPUT | PASS_B_OUTPUT
+                      | JOIN_OUTPUT | RUN_WRAPPER | OPERATOR_INSTRUCTION | DESIGN_REVIEW | OTHER
+     delivery_channel SYSTEM | USER_TURN | ATTACHMENT | TOOL | OTHER
+     description      string (required for DESIGN_REVIEW, OPERATOR_INSTRUCTION, OTHER)
+  }]
+  tools_available     [string]
+  external_access     NONE | DECLARED_OTHER
+  prior_context       NONE | SESSION_CONTINUATION | UNKNOWN
+  prior_context_description  string | null
+  reviewer_provider, reviewer_model_as_observed
+  dps                 DPS0 | DPS1 | DPS2 | DPS3 | DPSX
+  delivery_transport_sha256  hex (raw NENV-1 bytes, TEXT-D2 runs)
+  cdm_sha256
+}
+9.2 Freeze record
+freeze_record {
+  artifact_id, artifact_class, run_id
+  raw_sha256          (over raw output bytes exactly as emitted)
+  byte_length, frozen_at, frozen_by_operator_id
+  freeze_record_sha256
+}
+
+For two-stage Pass A, freeze the inventory-stage CDM before the inventory;
+then create a classification-stage CDM extending it only with the same run's
+inventory and verified receipt. Retain both CDMs and their parent relationship
+in run-control metadata. A CDM does not list itself as a delivered artifact;
+its hash is detached control metadata. This avoids recursive self-hashing.
+A CDM is frozen before the output of its run is released to anyone. An output is frozen as raw bytes before any downstream consumer receives it.
+
+9.3 Run registry
+
+The registry is append-only. Entries are never deleted.
+
+registry_entry {
+  apk_sha256, consumer (PASS_A | PASS_B | JOIN)
+  run_id, run_version (integer ≥ 1), parent_run_id | null
+  ordinal_for_apk_and_consumer (integer ≥ 1)
+  instrument_id, instrument_version
+  cdm_sha256, output_raw_sha256 | null
+  frozen_at | null
+  state   CURRENT | SUPERSEDED | ABANDONED
+  superseded_by_run_id | null, abandonment_reason | null
+}
+10. Change control
+
+Any material change to the following creates a new Admission Spec version:
+
+identifier formats or the node and source schemas;
+the ordering, visibility or availability rules;
+normalization or hashing;
+gate codes;
+the CDM, freeze record or registry schemas.
+
+Observed results must not silently change v0.1.5 while it keeps its version label.
+
+11. Unresolved limitations
+UL-AD1. Availability markers rest on export evidence or on provider and supplier declarations. Admission cannot verify that the content was actually in the model’s context.
+UL-AD2. CDMs are declared by the operator. They cannot detect leakage outside the delivery channels, paraphrased leakage, or exposure carried in model lineage or training.
+UL-AD3. result_state and UNKNOWN origin both depend on the provider or export. A source of UNKNOWN origin might have been added by a reviewer.
+UL-AD4. EXACT_TEXT_UTF8 preserves decoded source text bytes; this does not certify that the original container/export captured all content or visual layout.
+UL-AD5. No protocol yet exists for external or retrospective augmentation.
+UL-AD6. The development freeze lists local mechanical tests and their limits.
+They are not a complete admission implementation or semantic validator.
+Both passes must explicitly support literal Admission 0.1.5 before paired work.
+Older B packets are not implicitly upgraded. Join remains disabled.
+
+12. Successor consumer and transport binding (N-03/N-04)
+Every successor consumer requires literal admission_spec_version="0.1.5".
+The required specification digest is pinned from its independently hash-verified
+neutral development freeze, not from the caller's arbitrary CDM/expected map.
+Verify supplied ADMISSION_SPEC bytes against that pin; reject old literal versions
+and wrong spec hashes before analysis. Pinning identifies the version; it does not
+certify admission, authenticity or completeness.
+CDM artifact APK.sha256 denotes H5 semantic manifest identity. ADMISSION_REPORT
+uses H2 structured identity. Instrument/spec/wrapper/schema artifacts use raw-byte
+SHA256. These semantic/member identities are not raw transport hashes.
+TEXT-D2 adds delivery_transport_sha256: SHA256 of the complete exact NENV-1
+transport bytes, excluding the CDM and downstream outputs. Retain the bytes and
+verify them independently of semantic identities. The CDM's own hash stays detached.
+Each pass has its own transport envelope because its instrument differs. Compare
+shared APK/report member bytes separately, not whole A/B envelope hashes.
+This helper implementation is bounded; all other Admission gates still apply.
