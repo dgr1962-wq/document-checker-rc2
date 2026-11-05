@@ -1,0 +1,40 @@
+SHARED R2 CLARIFICATIONS — AD015 / TEXT-D2 / NENV-1, revision R2.1
+The underlying Input_Admission_v0.1.5.txt and its literal version/hash are unchanged.
+This addendum clarifies the existing contract; it adds no analytical artifact class,
+new transport framing, trust service, metric, semantic judgment or model authority.
+
+R2-P01/P02: remaining prose/spec/instrument/wrapper artifacts use exactly content.txt;
+event and ledger schema artifacts use exactly schema.json. No document alias.
+APK and ADMISSION_REPORT retain manifest.json and report.json and original payload
+members. PASS_B order is exactly APK, ADMISSION_REPORT, ADMISSION_SPEC,
+PASS_B_INSTRUMENT, RUN_WRAPPER, PASS_B_EVENT_SCHEMA, PASS_B_LEDGER_SCHEMA.
+Both the ordered CDM class sequence and transport sequence must match this list.
+A inventory-stage order and five classes remain as defined in frozen TEXT-D2.
+
+R2-P03: check_spec(version, supplied_bytes, trusted_sha256) is a bounded equality
+helper, not trusted-pin acquisition. Before calling it, an operator must verify the
+selected freeze against an independently established expected manifest identity,
+then obtain the required spec digest from that verified manifest. Never derive the
+expected trust anchor from the supplied CDM, spec bytes or arbitrary expected map.
+A helper pass alone does not satisfy preflight. A detached operator receipt must
+bind the verified neutral freeze/manifest, exact spec, verification outcome/time,
+run/stage, selected consumer freeze, CDM and delivery identity. Missing, unverified
+or mismatched receipt stops preflight before assessment. Receipt design is in the
+separately frozen operator R2 preflight contract; no receipt is a new CDM class.
+This requires existing independent trust, not a new trust-root service or runner.
+
+R2-S20: original supplied raw manifest and report must already be JCS-canonical,
+strictly decoded without duplicate keys, and accepted by the external Admission
+gate before any structured reserialization. Retain original bytes and rejection
+record; never silently normalize a rejected object. The detached preflight receipt
+binds raw digests and canonicality verification evidence. Equality of reconstructed
+bytes is valid only after this prerequisite; a structured object alone cannot prove it.
+
+R2-S21: evidential reference ranges are nonempty (0 <= start < end <= byte length),
+on Unicode codepoint boundaries. Empty supplied payloads remain valid metadata
+with zero length and empty-byte hash; they do not supply an empty evidence range.
+
+No full Admission implementation, actual model delivery, semantic reliability,
+calibration, PDF equivalence, original regression readiness or release approval.
+All existing gates and execution holds remain. A0.5 and its original binding record
+are unchanged; this revision does not migrate A to another freeze or authorize pairing.
